@@ -1,0 +1,43 @@
+{
+	"schemaVersion": 1,
+	"id": "waygl",
+	"version": "${version}",
+	"name": "WayGL",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"WiredTomato"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/waygl/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"client": [
+			{
+				"value": "net.wiredtomato.waygl.WayGL::clientInit",
+				"adapter": "kotlin"
+			}
+		],
+		"modmenu": [
+			{
+				"value": "net.wiredtomato.waygl.ModMenuIntegration",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		{
+			"config": "waygl.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.3",
+		"minecraft": "~1.20",
+		"java": ">=17",
+		"fabric-language-kotlin": ">=1.9.22"
+	}
+}

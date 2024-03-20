@@ -7,10 +7,11 @@ import java.awt.image.BufferedImage
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import javax.imageio.ImageIO
 
-
+/**
+ * Port of [moehreag/wayland_fixes](https://github.com/moehreag/wayland-fixes) DesktopFileInjector
+ */
 object IconInjector {
     const val APP_ID = "com.mojang.minecraft"
     private const val ICON_NAME = "minecraft.png"
@@ -99,19 +100,4 @@ object IconInjector {
         }
     }
 
-    private object XDG {
-        private fun getHome(): Path {
-            val home = System.getenv().getOrDefault("\$HOME", System.getProperty("user.home"))
-            check(!(home == null || home.isEmpty())) { "could not resolve user home" }
-            return Paths.get(home)
-        }
-
-        fun getUserDataLocation(): Path {
-            val xdgDataHome = System.getenv("\$XDG_DATA_HOME")
-            if (xdgDataHome == null || xdgDataHome.isEmpty()) {
-                return getHome().resolve(".local/share/")
-            }
-            return Paths.get(xdgDataHome)
-        }
-    }
 }

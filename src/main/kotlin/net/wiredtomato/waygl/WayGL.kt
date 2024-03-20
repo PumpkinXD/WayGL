@@ -1,7 +1,9 @@
 package net.wiredtomato.waygl
 
+import eu.midnightdust.lib.config.MidnightConfig
 import net.minecraft.util.Identifier
 import org.lwjgl.glfw.GLFW
+import org.lwjgl.system.Configuration
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -13,20 +15,28 @@ object WayGL {
     val LOGGER: Logger = LoggerFactory.getLogger(WayGL::class.java)
 
     @JvmStatic
-    val platform : Int by lazy { GLFW.glfwGetPlatform() }
+    val platform: Int by lazy { GLFW.glfwGetPlatform() }
 
     @JvmStatic
-    val isWayland : Boolean by lazy { platform == GLFW.GLFW_PLATFORM_WAYLAND }
+    val useWayland: Boolean by lazy { GLFW.glfwPlatformSupported(GLFW.GLFW_PLATFORM_WAYLAND) }
+
+    @JvmStatic
+    val isWayland: Boolean by lazy { platform == GLFW.GLFW_PLATFORM_WAYLAND }
 
     fun clientInit() {
+        MidnightConfig.init(MODID, Config::class.java)
 
+        if (Config.useNativeGlfw) {
+            Configuration.GLFW_LIBRARY_NAME.set(Config.nativeGlfwPath)
+        }
     }
 
     @JvmStatic
     fun tryUseWayland() {
         // The init hint only allows the wayland backend to be selected.
         // GLFW chooses the platform by itself.
-        GLFW.glfwInitHint(GLFW.GLFW_PLATFORM, GLFW.GLFW_PLATFORM_WAYLAND)
+        if (useWayland)
+            GLFW.glfwInitHint(GLFW.GLFW_PLATFORM, GLFW.GLFW_PLATFORM_WAYLAND)
     }
 
     @JvmStatic

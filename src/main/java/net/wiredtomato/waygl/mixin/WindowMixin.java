@@ -18,8 +18,8 @@ import static org.lwjgl.glfw.GLFW.*;
 @Mixin(Window.class)
 public abstract class WindowMixin {
 
-	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwCreateWindow(IILjava/lang/CharSequence;JJ)J"))
-	private void waygl$addWindowHints(WindowEventHandler windowEventHandler, MonitorTracker monitorTracker, WindowSettings windowSettings, String string, String string2, CallbackInfo ci) {
+	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwDefaultWindowHints()V", shift = At.Shift.AFTER, remap = false))
+	private void addWindowHints(WindowEventHandler windowEventHandler, MonitorTracker monitorTracker, WindowSettings windowSettings, String string, String string2, CallbackInfo ci) {
 		if (WayGL.useWayland()) {
 			glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
 			IconInjector.INSTANCE.inject();
@@ -28,7 +28,7 @@ public abstract class WindowMixin {
 	}
 
 	@Inject(method = "setIcon", at = @At("HEAD"), cancellable = true)
-	private void waygl$setIcon(ResourcePack resourcePack, Icons icons, CallbackInfo ci) {
+	private void setIcon(ResourcePack resourcePack, Icons icons, CallbackInfo ci) {
 		if (WayGL.useWayland()) {
 			IconInjector.INSTANCE.setIcon(resourcePack, icons);
 			ci.cancel();

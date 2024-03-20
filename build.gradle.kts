@@ -1,10 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("fabric-loom") version "1.3.8"
-    kotlin("jvm") version "1.9.0"
-    kotlin("plugin.serialization") version "1.9.0"
-    id("org.teamvoided.iridium") version "3.1.9"
+    id("fabric-loom") version "1.5-SNAPSHOT"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 group = project.properties["maven_group"]!!
@@ -15,27 +14,30 @@ val modid = project.properties["modid"]!! as String
 
 repositories {
     mavenCentral()
-}
-
-modSettings {
-    modId(modid)
-    modName("WayGL")
-
-    entrypoint("client", "net.wiredtomato.waygl.WayGL::clientInit")
-    mixinFile("waygl.mixins.json")
-
-    mutation {
-        this.depends["minecraft"] = ">=1.20"
-        //FAPI is not required
-        this.depends.remove("fabric-api")
-    }
+    maven("https://maven.terraformersmc.com/releases")
+    maven("https://api.modrinth.com/maven")
 }
 
 dependencies {
+    minecraft(libs.minecraft)
+    mappings(variantOf(libs.yarn.mappings) { classifier("v2") })
+    modImplementation(libs.fabric.loader)
+    modImplementation(libs.fabric.kt)
+
     implementation("org.lwjgl:lwjgl-glfw:3.3.2")
+    modImplementation(include(libs.midnightlib.get().toString())!!)
+    modImplementation(libs.mod.menu)
 }
 
 tasks {
+    processResources {
+        inputs.property("version", project.version)
+
+        filesMatching("fabric.mod.json") {
+            expand("version" to project.version)
+        }
+    }
+
     val targetJavaVersion = 17
     withType<JavaCompile> {
         options.encoding = "UTF-8"
@@ -49,5 +51,11 @@ tasks {
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(JavaVersion.toVersion(targetJavaVersion).toString()))
         withSourcesJar()
+    }
+
+    jar {
+        from("LICENSE") {
+            rename { "${it}_${project.base.archivesName.get()}"}
+        }
     }
 }

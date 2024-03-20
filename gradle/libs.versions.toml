@@ -1,0 +1,15 @@
+[versions]
+minecraft = "1.20"
+yarn_mappings = "1.20+build.1"
+fabric_loader = "0.15.3"
+fabric_kt = "1.10.17+kotlin.1.9.22"
+midnightlib = "1.4.1-fabric"
+modmenu = "7.0.1"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+yarn_mappings = { module = "net.fabricmc:yarn", version.ref = "yarn_mappings" }
+fabric_loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_loader" }
+fabric_kt = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric_kt" }
+midnightlib = { module = "maven.modrinth:midnightlib", version.ref = "midnightlib" }
+mod_menu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
