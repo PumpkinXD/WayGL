@@ -40,7 +40,7 @@ object XDG {
 
         try {
             val p = builder.start()
-            themeName = IOUtils.toString(p.inputStream, StandardCharsets.UTF_8).split("'").get(1)
+            themeName = IOUtils.toString(p.inputStream, StandardCharsets.UTF_8).split("'")[1]
             p.waitFor()
         } catch (e: IOException) {
             themeName = "default"
