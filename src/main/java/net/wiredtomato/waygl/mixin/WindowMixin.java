@@ -17,7 +17,6 @@ import static org.lwjgl.glfw.GLFW.*;
 
 @Mixin(Window.class)
 public abstract class WindowMixin {
-
 	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwDefaultWindowHints()V", shift = At.Shift.AFTER, remap = false))
 	private void addWindowHints(WindowEventHandler windowEventHandler, MonitorTracker monitorTracker, WindowSettings windowSettings, String string, String string2, CallbackInfo ci) {
 		if (WayGL.useWayland()) {

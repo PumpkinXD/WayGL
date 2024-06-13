@@ -10,6 +10,7 @@ import net.minecraft.client.texture.NativeImage
 import net.minecraft.client.texture.NativeImageBackedTexture
 import net.minecraft.util.Identifier
 import net.wiredtomato.waygl.WayGL.LOGGER
+import net.wiredtomato.waygl.config.Config
 import org.apache.commons.io.IOUtils
 import org.lwjgl.glfw.GLFW
 import java.awt.image.BufferedImage
@@ -254,7 +255,7 @@ object VirtualCursor {
 
             LOGGER.info("Falling back to packaged cursor")
             return MinecraftClient.getInstance().resourceManager
-                .getResource(Identifier("virtual_cursor", "default"))
+                .getResource(Identifier.of("virtual_cursor", "default"))
                 .map { r ->
                     runCatching { return@map r.inputStream }
                     null

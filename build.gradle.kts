@@ -1,9 +1,10 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("fabric-loom") version "1.5-SNAPSHOT"
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
+    id("fabric-loom") version "1.6-SNAPSHOT"
+    kotlin("jvm") version "2.0.0"
+    kotlin("plugin.serialization") version "2.0.0"
 }
 
 group = project.properties["maven_group"]!!
@@ -16,6 +17,9 @@ repositories {
     mavenCentral()
     maven("https://maven.terraformersmc.com/releases")
     maven("https://api.modrinth.com/maven")
+    maven("https://maven.isxander.dev/releases") {
+        name = "Xander Maven"
+    }
 }
 
 dependencies {
@@ -24,8 +28,8 @@ dependencies {
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.kt)
 
-    implementation("org.lwjgl:lwjgl-glfw:3.3.2")
-    modImplementation(include(libs.midnightlib.get().toString())!!)
+    modImplementation(libs.fabric.api)
+    modImplementation(libs.yacl)
     modImplementation(libs.mod.menu)
 }
 
@@ -38,14 +42,16 @@ tasks {
         }
     }
 
-    val targetJavaVersion = 17
-    withType<JavaCompile> {
+    val targetJavaVersion = 21
+    withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
         options.release.set(targetJavaVersion)
     }
 
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = targetJavaVersion.toString()
+    withType<KotlinCompile>().all {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
     }
 
     java {

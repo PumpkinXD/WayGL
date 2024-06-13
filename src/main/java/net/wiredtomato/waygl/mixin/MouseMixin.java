@@ -3,9 +3,9 @@ package net.wiredtomato.waygl.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Mouse;
-import net.wiredtomato.waygl.Config;
 import net.wiredtomato.waygl.VirtualCursor;
 import net.wiredtomato.waygl.WayGL;
+import net.wiredtomato.waygl.config.Config;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,7 +25,7 @@ public abstract class MouseMixin {
 
     @ModifyArgs(method = "method_22689", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Mouse;onCursorPos(JDD)V"))
     private void modifyCursorPos(Args args) {
-        if (WayGL.isWayland() && Config.useVirtualCursor) {
+        if (WayGL.isWayland() && Config.Companion.getUseVirtualCursor() && WayGL.useVCursor()) {
             args.set(1, VirtualCursor.INSTANCE.handleMovementX(args.get(1)));
             args.set(2, VirtualCursor.INSTANCE.handleMovementY(args.get(2)));
         }
@@ -33,14 +33,13 @@ public abstract class MouseMixin {
 
     @Inject(method = { "lockCursor", "unlockCursor" }, at = @At(value = "FIELD", target = "Lnet/minecraft/client/Mouse;cursorLocked:Z", ordinal = 1, shift = At.Shift.AFTER))
     private void onLockCursor(CallbackInfo ci) {
-        if (WayGL.isWayland() && Config.useVirtualCursor) {
+        if (WayGL.isWayland() && Config.Companion.getUseVirtualCursor() && WayGL.useVCursor())
             VirtualCursor.INSTANCE.grabMouse(isCursorLocked());
-        }
     }
 
     @WrapOperation(method = { "lockCursor", "unlockCursor" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/InputUtil;setCursorParameters(JIDD)V"))
     private void onLockCursorSetCursorPosition(long handler, int inputModeValue, double x, double y, Operation<Void> original) {
-        if (!(Config.useVirtualCursor && WayGL.useWayland())) {
+        if (!(Config.Companion.getUseVirtualCursor() && WayGL.useWayland() && WayGL.useVCursor())) {
             if (isCursorLocked()) original.call(handler, inputModeValue, x, y);
         } else VirtualCursor.INSTANCE.setCursorPosition(getX(), getY());
     }

@@ -1,7 +1,7 @@
 package net.wiredtomato.waygl
 
-import eu.midnightdust.lib.config.MidnightConfig
 import net.minecraft.util.Identifier
+import net.wiredtomato.waygl.config.Config
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.system.Configuration
 import org.slf4j.Logger
@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory
 @Suppress("unused")
 object WayGL {
     const val MODID = "waygl"
+    private var useVCursor = false
 
     @JvmField
     val LOGGER: Logger = LoggerFactory.getLogger(WayGL::class.java)
@@ -24,7 +25,8 @@ object WayGL {
     val isWayland: Boolean by lazy { platform == GLFW.GLFW_PLATFORM_WAYLAND }
 
     fun clientInit() {
-        MidnightConfig.init(MODID, Config::class.java)
+        Config.HANDLER.load()
+        useVCursor = Config.useVirtualCursor
 
         if (Config.useNativeGlfw) {
             Configuration.GLFW_LIBRARY_NAME.set(Config.nativeGlfwPath)
@@ -46,5 +48,8 @@ object WayGL {
         return isWayland
     }
 
-    fun id(path: String) = Identifier(MODID, path)
+    @JvmStatic
+    fun useVCursor() = useVCursor
+
+    fun id(path: String) = Identifier.of(MODID, path)
 }
