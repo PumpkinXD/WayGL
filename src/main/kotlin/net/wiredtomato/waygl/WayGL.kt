@@ -1,7 +1,14 @@
 package net.wiredtomato.waygl
 
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.util.Identifier
 import net.wiredtomato.waygl.config.Config
+import net.wiredtomato.waygl.os.OS
+import net.wiredtomato.waygl.os.OSUtils
+import net.wiredtomato.waygl.workaround.NvidiaWorkaround
+import net.wiredtomato.waygl.workaround.env.GraphicsAdapterProbe
+import net.wiredtomato.waygl.workaround.env.GraphicsAdapterVendor
+import net.wiredtomato.waygl.workaround.env.LinuxAdapterInfo
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.system.Configuration
 import org.slf4j.Logger
@@ -31,6 +38,14 @@ object WayGL {
         if (Config.useNativeGlfw) {
             Configuration.GLFW_LIBRARY_NAME.set(Config.nativeGlfwPath)
         }
+
+        if (applyNvidiaWorkaround(OSUtils.os(), GraphicsAdapterProbe.findLinuxAdapters())) {
+            NvidiaWorkaround.apply()
+        }
+    }
+
+    private fun applyNvidiaWorkaround(os: OS, adapters: List<LinuxAdapterInfo>): Boolean {
+        return os == OS.LINUX && adapters.any { it.vendor == GraphicsAdapterVendor.NVIDIA } && !FabricLoader.getInstance().isModLoaded("sodium")
     }
 
     @JvmStatic
