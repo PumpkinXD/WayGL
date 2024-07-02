@@ -5,6 +5,7 @@ plugins {
     id("fabric-loom") version "1.6-SNAPSHOT"
     kotlin("jvm") version "2.0.0"
     kotlin("plugin.serialization") version "2.0.0"
+    alias(libs.plugins.minotaur)
     `maven-publish`
 }
 
@@ -64,6 +65,20 @@ tasks {
         from("LICENSE") {
             rename { "${it}_${project.base.archivesName.get()}"}
         }
+    }
+}
+
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set("waygl")
+    versionNumber.set(project.version.toString())
+    versionType.set("release")
+    uploadFile.set(tasks.jar)
+    gameVersions.addAll("1.21")
+    loaders.add("fabric")
+    dependencies {
+        required.project("fabric-language-kotlin")
+        required.project("yacl")
     }
 }
 

@@ -6,6 +6,7 @@ fabric_kt = "1.11.0+kotlin.2.0.0"
 fabric_api = "0.100.1+1.21"
 yacl = "3.5.0+1.21-fabric"
 modmenu = "11.0.0-beta.1"
+minotaur = "2.+"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -15,3 +16,6 @@ fabric_kt = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fab
 fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api" }
 yacl = { module = "dev.isxander:yet-another-config-lib", version.ref = "yacl" }
 mod_menu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
+
+[plugins]
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
