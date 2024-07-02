@@ -73,7 +73,7 @@ modrinth {
     projectId.set("waygl")
     versionNumber.set(project.version.toString())
     versionType.set("release")
-    uploadFile.set(tasks.jar)
+    uploadFile.set(tasks.remapJar)
     gameVersions.addAll("1.21")
     loaders.add("fabric")
     dependencies {
