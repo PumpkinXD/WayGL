@@ -64,7 +64,7 @@ object WayGL {
     }
 
     @JvmStatic
-    fun useVCursor() = useVCursor
+    fun useVCursor() = useVCursor && isWayland
 
     fun id(path: String) = Identifier.of(MODID, path)
 }

@@ -25,22 +25,21 @@ import javax.imageio.ImageIO
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.math.abs
-import kotlin.properties.Delegates
 
 /**
  * Port of [moehreag/wayland_fixes](https://github.com/moehreag/wayland-fixes) VirtualCursor
  */
 object VirtualCursor {
     private val chunks = mutableListOf<XCursor.ImageChunk>()
-    private var virtOffsetX by Delegates.notNull<Double>()
-    private var virtOffsetY by Delegates.notNull<Double>()
-    private var current by Delegates.notNull<Int>()
+    private var virtOffsetX = 0.0
+    private var virtOffsetY = 0.0
+    private var current = 0
     private var images = mutableListOf<Identifier>()
-    private var animationTime by Delegates.notNull<Long>()
-    private var virtual by Delegates.notNull<Boolean>()
-    private var windowHandle by Delegates.notNull<Long>()
-    private var lastX by Delegates.notNull<Double>()
-    private var lastY by Delegates.notNull<Double>()
+    private var animationTime = 0L
+    private var virtual = false
+    private var windowHandle = 0L
+    private var lastX = 0.0
+    private var lastY = 0.0
     private val cursorSize by lazy { XDG.getCursorSize() }
 
     private fun mayVirtualize() = (Config.useVirtualCursor && MinecraftClient.getInstance().world != null)
@@ -81,8 +80,16 @@ object VirtualCursor {
                 GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED)
                 virtual = true
             } else {
-                GLFW.glfwSetInputMode(this.windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL)
+                GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL)
             }
+        }
+    }
+
+    fun grabMouseNoVirtualize(grab: Boolean, windowHandle: Long) {
+        if (grab) {
+            GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED)
+        } else {
+            GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL)
         }
     }
 

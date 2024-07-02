@@ -20,7 +20,7 @@ object NvidiaWorkaround {
             }
         } catch (t: Throwable) {
             LOGGER.error("Failed to apply NVIDIA workaround", t)
-            LOGGER.error("READ ME! The workaround fot the NVIDIA Graphics Driver did not apply correctly!")
+            LOGGER.error("READ ME! The workaround for the NVIDIA Graphics Driver did not apply correctly!")
             LOGGER.error("READ ME! Your game is highly likely to crash at startup")
             LOGGER.error("READ ME! For more information see: https://github.com/wired-tomato/WayGL/issues/1")
         }

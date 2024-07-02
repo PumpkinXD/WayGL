@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.wiredtomato.waygl.VirtualCursor;
 import net.wiredtomato.waygl.WayGL;
-import net.wiredtomato.waygl.config.Config;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,7 +18,7 @@ public abstract class MinecraftClientMixin {
 
     @Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;textureManager:Lnet/minecraft/client/texture/TextureManager;", ordinal = 0, shift = At.Shift.AFTER))
     private void onTextureManagerSetup(RunArgs args, CallbackInfo ci) {
-        if (WayGL.isWayland() && Config.Companion.getUseVirtualCursor() && WayGL.useVCursor()) {
+        if (WayGL.useVCursor()) {
             VirtualCursor.INSTANCE.setup(MinecraftClient.getInstance().getWindow().getHandle());
         }
     }

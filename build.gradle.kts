@@ -5,6 +5,7 @@ plugins {
     id("fabric-loom") version "1.6-SNAPSHOT"
     kotlin("jvm") version "2.0.0"
     kotlin("plugin.serialization") version "2.0.0"
+    `maven-publish`
 }
 
 group = project.properties["maven_group"]!!
@@ -62,6 +63,26 @@ tasks {
     jar {
         from("LICENSE") {
             rename { "${it}_${project.base.archivesName.get()}"}
+        }
+    }
+}
+
+publishing {
+    publications.create<MavenPublication>("waygl") {
+        groupId = project.group.toString()
+        artifactId = project.name.lowercase()
+        version = project.version.toString()
+
+        from(components["java"])
+    }
+
+    repositories {
+        maven("https://maven.wiredtomato.net/releases") {
+            name = "wtRepo"
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
         }
     }
 }
